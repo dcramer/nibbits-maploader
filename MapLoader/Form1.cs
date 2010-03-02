@@ -184,7 +184,7 @@ namespace MapLoader
                     break;
                 }
                 
-                string pathIdentfier = moveTo.Substring(pos1, pos2 - pos1);
+                string pathIdentfier = moveTo.Substring(pos1, pos2 - pos1 + 1);
                 
                 // ==============================================
                 // Translate our PathIdentifier
@@ -197,12 +197,12 @@ namespace MapLoader
                 // 2. Check if user has defined a custom path
                 if (realPath == "")
                 {
-                    pathUser.GetPath(pathIdentfier);
+                    realPath = pathUser.GetPath(pathIdentfier);
                 }
                 // 3. Still no path, query the user
                 if (realPath == "")
                 {
-                    pathUser.QueryUserForPath(this,pathIdentfier);
+                    realPath = pathUser.QueryUserForPath(this, pathIdentfier);
                 }
 
                 // 4. Still no path?? Okay lets just save the file somewhere else
@@ -213,7 +213,7 @@ namespace MapLoader
                 }
 
 
-                moveTo.Replace(pathIdentfier, realPath);
+                moveTo = moveTo.Replace(pathIdentfier, realPath);
 
             }
 

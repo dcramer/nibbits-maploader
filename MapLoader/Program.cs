@@ -18,7 +18,8 @@ namespace MapLoader
         {
             //if (args.Length == 0) { Application.Exit(); return; }
             //NIBBITS_LINK = args[0];
-            NIBBITS_LINK = "nibbits://www.nibbits.com/sc2/maps/get/131540/";
+            NIBBITS_LINK = "nibbits://www.nibbits.com/sc/maps/get/131403/";
+            //NIBBITS_LINK = "nibbits://www.nibbits.com/sc2/maps/get/131540/";
 
 
             Application.EnableVisualStyles();
