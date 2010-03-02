@@ -15,6 +15,7 @@ namespace MapLoader
     {
         ExtensionConfiguration extConf;
         PathFinder pathFinder;
+        PathUserDefined pathUser;
         Uri fileUri;
 
         public Form1()
@@ -35,6 +36,8 @@ namespace MapLoader
             // ==========================================================
             pathFinder = new PathFinder();
             pathFinder.GatherPathes();
+            pathUser = new PathUserDefined();
+
 
             // ==========================================================
             // Start Download
@@ -165,17 +168,69 @@ namespace MapLoader
         {
             string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
             string extension = Path.GetExtension(fileName).ToLower().Substring(1);
-
-
+            
             // Move
-            if (extConf.GetCopyPathForExtension(extension) != "")
+            string moveTo = extConf.GetCopyPathForExtension(extension);
+
+            // Construct Path
+            while (moveTo.IndexOf("%") != -1)
             {
+                int pos1 = moveTo.IndexOf("%");
+                int pos2 = moveTo.IndexOf("%",pos1+1);
+                 
+                // something is wrong with our XML, save the file somwhere else
+                if (pos2 == -1) {
+                    moveTo = "";
+                    break;
+                }
+                
+                string pathIdentfier = moveTo.Substring(pos1, pos2 - pos1);
+                
+                // ==============================================
+                // Translate our PathIdentifier
+                // to the real Path
+                // ==============================================
+                
+                // 1. Check if PathFinder know our Path
+                string realPath = pathFinder.GetPath(pathIdentfier);
 
-                string moveTo = extConf.GetCopyPathForExtension(extension);
+                // 2. Check if user has defined a custom path
+                if (realPath == "")
+                {
+                    pathUser.GetPath(pathIdentfier);
+                }
+                // 3. Still no path, query the user
+                if (realPath == "")
+                {
+                    pathUser.QueryUserForPath(this,pathIdentfier);
+                }
 
-                if (!File.Exists(moveTo + "/" + fileName)) 
-                    File.Copy(Path.GetTempPath() + "/" + fileName, moveTo + "/" + fileName, false);
+                // 4. Still no path?? Okay lets just save the file somewhere else
+                if (realPath == "")
+                {
+                    moveTo = "";
+                    break;
+                }
+
+
+                moveTo.Replace(pathIdentfier, realPath);
+
             }
+
+
+            if (moveTo != "")
+            {
+                if (!File.Exists(moveTo + "/" + fileName))
+                {
+                    // TODO: "File already exists, replace?"
+                    File.Copy(Path.GetTempPath() + "/" + fileName, moveTo + "/" + fileName, false);
+                }
+            }
+            else
+            {
+                // TODO: save somewhere else
+            }
+            
 
             // be gone!
             Application.Exit();

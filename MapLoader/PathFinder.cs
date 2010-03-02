@@ -7,6 +7,10 @@ using Microsoft.Win32;
 
 namespace MapLoader
 {
+    /// <summary>
+    /// This class trys to automatically find pathes to game folders etc and
+    /// keeps track of them.
+    /// </summary>
     class PathFinder
     {
 
