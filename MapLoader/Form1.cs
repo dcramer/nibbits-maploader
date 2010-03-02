@@ -14,24 +14,27 @@ namespace MapLoader
     public partial class Form1 : Form
     {
         ExtensionConfiguration extConf;
+        PathFinder pathFinder;
         Uri fileUri;
 
         public Form1()
         {
-            InitializeComponent();
- 
- 
+            InitializeComponent(); 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             // ==========================================================
-            // REading XML Extension Config
+            // Reading XML Extension Config
             // ==========================================================
             extConf = new ExtensionConfiguration();
             extConf.ReadConfig();
 
-
+            // ==========================================================
+            // Find Pathes for Game Folders etc.
+            // ==========================================================
+            pathFinder = new PathFinder();
+            pathFinder.GatherPathes();
 
             // ==========================================================
             // Start Download

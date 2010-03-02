@@ -1,3 +1,4 @@
-<extension type="s2ma">
-<default>C:\Nibbits</default>
+<extension type="s2replay">
+<default>%DOCUMENTS%\Starcraft II Beta\Replays\Multiplayer\Recent</default>
+<windows7>%DOCUMENTS%\Starcraft II Beta\Replays\Multiplayer\Recent</windows7>
 </extension>
