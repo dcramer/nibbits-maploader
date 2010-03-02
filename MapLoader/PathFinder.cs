@@ -51,8 +51,8 @@ namespace MapLoader
             // 2. Try Default Path
             if (pathToStarcraft2Folder == "")
             {
-                string defaultPath = pathToProgramFiles + "/" + "StarCraft II/";
-                if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = defaultPath;
+                string sc2_defaultPath = pathToProgramFiles + "/" + "StarCraft II/";
+                if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = sc2_defaultPath;
             }
 
             // 3. Try Default Path (Beta)
@@ -63,6 +63,17 @@ namespace MapLoader
             }
 
             dictPathIdentifiers.Add("%SC2_INSTALL_PATH%", pathToStarcraft2Folder);
+
+            // =======================================
+            // STARCRAFT I
+            // (no registry key to my knowledge)
+            // =======================================
+            // 1. Try Default Path
+            string pathToStarcraft1Folder = "";
+            string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
+            if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
+
+            dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", pathToStarcraft1Folder);
         }
 
         

@@ -62,10 +62,21 @@ namespace MapLoader
                     // ==========================================================
                     string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
                     string extension = Path.GetExtension(fileName).ToLower().Substring(1);
-                    if (extConf.dictExtConfiguration.ContainsKey(extension))
+
+                    if (extConf.IsValidExtension(extension))
                     {
                         lblFilename.Text = fileName; // Display filename
                         bgWorker.RunWorkerAsync();
+                    }
+                    
+                    else
+                    {
+                        // No action for this Extension defined
+                        // Either link is broken or someone tampered with the XML
+
+                        // Quit application, maybe should do something better, like pop-up a message, but
+                        // that would be annoying too.. so lets just exit here
+                        Application.Exit(); 
                     }
                 }
 
@@ -157,10 +168,10 @@ namespace MapLoader
 
 
             // Move
-            if (extConf.dictExtConfiguration.ContainsKey(extension))
+            if (extConf.GetCopyPathForExtension(extension) != "")
             {
 
-                string moveTo = extConf.dictExtConfiguration[extension].dictActionsPerOS["default"];
+                string moveTo = extConf.GetCopyPathForExtension(extension);
 
                 if (!File.Exists(moveTo + "/" + fileName)) 
                     File.Copy(Path.GetTempPath() + "/" + fileName, moveTo + "/" + fileName, false);

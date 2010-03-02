@@ -11,10 +11,61 @@ namespace MapLoader
     class ExtensionConfiguration
     {
 
-        public Dictionary<string, Extension> dictExtConfiguration;
+        private Dictionary<string, Extension> dictExtConfiguration;
+
+        /// <summary>
+        /// Checks if there's an action defined for this extension
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValidExtension(string extension)
+        {
+            return dictExtConfiguration.ContainsKey(extension);
+        }
 
 
-        public class Extension
+        /// <summary>
+        /// Returns the path to copy the file to for a given extension.
+        /// Will return a custom path for each OS if specified in extension.xml
+        /// </summary>
+        /// <returns></returns>
+        public string GetCopyPathForExtension(string extension) {
+            
+            // check if we have something for this extension in store
+            if (!dictExtConfiguration.ContainsKey(extension.ToLower())) return "";
+            
+            Extension currentExtension = dictExtConfiguration[extension.ToLower()];
+            
+            // Determining OS
+            OperatingSystem os = System.Environment.OSVersion;
+            Version osVersion = os.Version;
+
+            // good ol' Xp
+            if (osVersion.Major == 5)
+            {
+                if (currentExtension.dictActionsPerOS.ContainsKey("xp")) return currentExtension.dictActionsPerOS["xp"];
+                else return currentExtension.dictActionsPerOS["default"];
+            }
+            // Windows Vista
+            else if (osVersion.Major == 6 && osVersion.Minor == 0)
+            {
+                if (currentExtension.dictActionsPerOS.ContainsKey("vista")) return currentExtension.dictActionsPerOS["vista"];
+                else return currentExtension.dictActionsPerOS["default"];
+            }
+            // Windows 7
+            else if (osVersion.Major == 6 && osVersion.Minor == 1)
+            {
+                if (currentExtension.dictActionsPerOS.ContainsKey("windows7")) return currentExtension.dictActionsPerOS["windows7"];
+                else return currentExtension.dictActionsPerOS["default"];
+            }
+
+            return currentExtension.dictActionsPerOS["default"];
+        }
+
+
+        /// <summary>
+        /// Little container class for extensions & there copy-path's per OS
+        /// </summary>
+        class Extension
         {
             public string ExtensionName;            
             public Dictionary<string, string> dictActionsPerOS;
@@ -24,7 +75,6 @@ namespace MapLoader
                 this.ExtensionName = name;
                 dictActionsPerOS = new Dictionary<string, string>();
             }
-
         }
 
         public ExtensionConfiguration()
@@ -32,6 +82,9 @@ namespace MapLoader
             dictExtConfiguration = new Dictionary<string, Extension>();
         }
 
+        /// <summary>
+        /// Reads the extension.xml
+        /// </summary>
         public void ReadConfig()
         {
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
