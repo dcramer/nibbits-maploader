@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using Microsoft.Win32;
+using Utility.ModifyRegistry;
 
 namespace MapLoader
 {
@@ -25,6 +27,7 @@ namespace MapLoader
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             // ==========================================================
             // Reading XML Extension Config
             // ==========================================================
@@ -35,6 +38,7 @@ namespace MapLoader
             // Find Pathes for Game Folders etc.
             // ==========================================================
             pathFinder = new PathFinder();
+
             pathFinder.GatherPathes();
             pathUser = new PathUserDefined();
 
@@ -69,7 +73,18 @@ namespace MapLoader
                     if (extConf.IsValidExtension(extension))
                     {
                         lblFilename.Text = fileName; // Display filename
-                        bgWorker.RunWorkerAsync();
+
+                        //ask user if they want to download file
+                        if (MessageBox.Show("Do you want to download " + fileName, "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            // a 'DialogResult.Yes' value was returned from the MessageBox
+                            bgWorker.RunWorkerAsync();
+                        }
+                        else
+                        {
+                            Application.Exit();
+                        }
+
                     }
                     
                     else
@@ -78,7 +93,10 @@ namespace MapLoader
                         // Either link is broken or someone tampered with the XML
 
                         // Quit application, maybe should do something better, like pop-up a message, but
-                        // that would be annoying too.. so lets just exit here
+                        // that would be annoying too.. so lets just exit here...
+                        // or not. waiting for program to do nothing then quit is stupid
+                        // show user a popup!
+                        MessageBox.Show("Timeout!", "Timeout!", MessageBoxButtons.OK);
                         Application.Exit(); 
                     }
                 }
@@ -203,6 +221,15 @@ namespace MapLoader
                 if (realPath == "")
                 {
                     realPath = pathUser.QueryUserForPath(this, pathIdentfier);
+
+                    if (realPath != "")
+                    {
+                        //Save path to registry
+                        ModifyRegistry mysc1Registry = new ModifyRegistry();
+                        mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
+                        mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
+                        mysc1Registry.Write("InstallPath", realPath);
+                    }
                 }
 
                 // 4. Still no path?? Okay lets just save the file somewhere else
@@ -233,7 +260,7 @@ namespace MapLoader
             
 
             // be gone!
-            Application.Exit();
+           // Application.Exit();
         }
     }
 }

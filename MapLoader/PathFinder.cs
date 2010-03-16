@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Microsoft.Win32;
+using System.Xml;
+using System.Windows.Forms;
+using Utility.ModifyRegistry;
 
 namespace MapLoader
 {
@@ -46,11 +49,26 @@ namespace MapLoader
             // =======================================
             // STARCRAFT II
             // =======================================
-            // Install Path
+            // Install Path + add modifyregistry
             string pathToStarcraft2Folder = "";
+            ModifyRegistry mysc2Registry = new ModifyRegistry();
+            mysc2Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
+            mysc2Registry.ShowError = true;
 
-            // 1. Try Registry
-            pathToStarcraft2Folder = GetRegistryValueFromLocalMachine("Software\\Blizzard Entertainment\\Starcraft II", "InstallPath");
+            // 1a. Try Registry LocalMachine
+            pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
+
+            // 1b. Try Registry CurrentUser
+            if (pathToStarcraft2Folder == null)
+            {
+                mysc2Registry.BaseRegistryKey = Registry.CurrentUser;
+                pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
+            }
+
+            if (pathToStarcraft2Folder == null)
+            {
+                pathToStarcraft2Folder = "";
+            }
 
             // 2. Try Default Path
             if (pathToStarcraft2Folder == "")
@@ -71,11 +89,36 @@ namespace MapLoader
             // =======================================
             // STARCRAFT I
             // (no registry key to my knowledge)
+            // ^-- (well there is!)
             // =======================================
-            // 1. Try Default Path
+            //
             string pathToStarcraft1Folder = "";
-            string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
-            if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
+            ModifyRegistry mysc1Registry = new ModifyRegistry();
+            mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
+            mysc1Registry.ShowError = true;
+
+            // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
+            pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
+
+            // 1b. Try Registry CurrentUser
+            if (pathToStarcraft1Folder == null)
+            {
+                mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
+                pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
+            }
+
+            if (pathToStarcraft1Folder == null)
+            {
+                pathToStarcraft1Folder = "";
+            }
+
+            // 2. Try Default Path
+            if (pathToStarcraft1Folder == "")
+            {
+                string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
+
+                if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
+            }
 
             dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", pathToStarcraft1Folder);
         }
@@ -87,9 +130,8 @@ namespace MapLoader
             else return "";
         }
 
-     
 
-
+        // TRY TO READ REGISTRY FOR SC2 KEY (THIS IS NOT NEEDED ANYMORE)
         private string GetRegistryValueFromLocalMachine(string key, string value)
         {
             RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(key);
@@ -98,9 +140,16 @@ namespace MapLoader
             {
                 retVal = registryKey.GetValue(value).ToString();
             }
+
+            RegistryKey registryKeyCurrent = Registry.CurrentUser.OpenSubKey(key);
+            if (registryKeyCurrent != null)
+            {
+                retVal = registryKeyCurrent.GetValue(value).ToString();
+            }
+
             else
             {
-                retVal = "";
+                return null;
             }
             registryKey.Close();
             return retVal;
