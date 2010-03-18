@@ -16,9 +16,16 @@ namespace MapLoader
         [STAThread]
         static void Main(string[] args)
         {
-            //if (args.Length == 0) { Application.Exit(); return; }
-            //NIBBITS_LINK = args[0];
-            NIBBITS_LINK = "nibbits://www.nibbits.com/sc/maps/get/131403/";
+            if (args.Length == 0)
+            {
+                Application.Run(new Formsetup());
+                Application.Exit();
+                return;
+            }
+
+            NIBBITS_LINK = args[0];
+            //NIBBITS_LINK = "nibbits://www.nibbits.com/sc/maps/get/131403/";
+            //NIBBITS_LINK = "nibbits://wc3.nibbits.com/maps/get/131603/";
             //NIBBITS_LINK = "nibbits://www.nibbits.com/sc2/maps/get/131540/";
 
 

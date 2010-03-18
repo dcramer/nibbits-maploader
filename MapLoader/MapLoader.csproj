@@ -55,6 +55,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formsetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formsetup.Designer.cs">
+      <DependentUpon>Formsetup.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModifyRegistry.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="PathUserDefined.cs" />
@@ -62,6 +68,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formsetup.resx">
+      <DependentUpon>Formsetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

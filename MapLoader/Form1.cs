@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using Microsoft.Win32;
-using Utility.ModifyRegistry;
+using System.Threading;
 
 namespace MapLoader
 {
@@ -38,7 +38,6 @@ namespace MapLoader
             // Find Pathes for Game Folders etc.
             // ==========================================================
             pathFinder = new PathFinder();
-
             pathFinder.GatherPathes();
             pathUser = new PathUserDefined();
 
@@ -96,7 +95,7 @@ namespace MapLoader
                         // that would be annoying too.. so lets just exit here...
                         // or not. waiting for program to do nothing then quit is stupid
                         // show user a popup!
-                        MessageBox.Show("Timeout!", "Timeout!", MessageBoxButtons.OK);
+                        MessageBox.Show("Error!", "Timeout!", MessageBoxButtons.OK);
                         Application.Exit(); 
                     }
                 }
@@ -208,7 +207,6 @@ namespace MapLoader
                 // Translate our PathIdentifier
                 // to the real Path
                 // ==============================================
-                
                 // 1. Check if PathFinder know our Path
                 string realPath = pathFinder.GetPath(pathIdentfier);
 
@@ -217,19 +215,31 @@ namespace MapLoader
                 {
                     realPath = pathUser.GetPath(pathIdentfier);
                 }
-                // 3. Still no path, query the user
+                // 3. Still no path, query the user for setup
                 if (realPath == "")
                 {
-                    realPath = pathUser.QueryUserForPath(this, pathIdentfier);
-
-                    if (realPath != "")
+                    if (MessageBox.Show("No path was found to save " + fileName + " to. Do you want to go to setup?", "No path found!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        //Save path to registry
-                        ModifyRegistry mysc1Registry = new ModifyRegistry();
-                        mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
-                        mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
-                        mysc1Registry.Write("InstallPath", realPath);
+                        // open setup if user say yes
+                        System.Threading.Thread setup = new System.Threading.Thread(new System.Threading.ThreadStart(ThreadProc));
+                        setup.SetApartmentState(ApartmentState.STA);
+                        setup.Start();
+                        setup.Join();
+                        //RESTART APPLICATION
+                        //TODO: the same arguments need to be returned.
+
+                        // Get the parameters/arguments passed to program if any
+                        string arguments = string.Empty;
+                        string[] args = Environment.GetCommandLineArgs();
+                        for (int i = 1; i < args.Length; i++) // args[0] is always exe path/filename
+                            arguments += args[i] + " ";
+
+
+                        Application.Exit();
+                        System.Diagnostics.Process.Start(Application.ExecutablePath, arguments);
                     }
+
+                    realPath = pathFinder.GetPath(pathIdentfier);
                 }
 
                 // 4. Still no path?? Okay lets just save the file somewhere else
@@ -249,18 +259,29 @@ namespace MapLoader
             {
                 if (!File.Exists(moveTo + "/" + fileName))
                 {
-                    // TODO: "File already exists, replace?"
+                    // If the file does not excist. Copy it to the correct folder
                     File.Copy(Path.GetTempPath() + "/" + fileName, moveTo + "/" + fileName, false);
                 }
+
+                else
+                {
+
+                    // If file excist, ask for overwrite.
+                    if (MessageBox.Show("Do you want to overwrite " + fileName, "File already excist!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        // a 'DialogResult.Yes' value was returned from the MessageBox
+                        File.Copy(Path.GetTempPath() + "/" + fileName, moveTo + "/" + fileName, true);
+                    }
+                }
             }
-            else
-            {
-                // TODO: save somewhere else
-            }
-            
 
             // be gone!
-           // Application.Exit();
+            Application.Exit();
+        }
+
+        public static void ThreadProc()
+        {
+            Application.Run(new Formsetup());
         }
     }
 }

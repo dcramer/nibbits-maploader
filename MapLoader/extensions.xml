@@ -6,13 +6,25 @@
 </extension>
 <!-- Starcraft 1 Maps -->
 <extension type="scm">
-  <default>%SC1_INSTALL_PATH%\maps\BroodWar\</default>
+  <default>%SC1_INSTALL_PATH%\maps\download\</default>
 </extension>
 <extension type="scx">
-  <default>%SC1_INSTALL_PATH%\maps\BroodWar\</default>
+  <default>%SC1_INSTALL_PATH%\maps\download\</default>
 </extension>
 <!-- Starcraft 1 Replays -->
 <extension type="rep">
   <default>%SC1_INSTALL_PATH%\maps\replays\</default>
 </extension>
+<!-- Warcraft 3 Maps-->
+<extension type="w3m">
+  <default>%WC3_INSTALL_PATH%\maps\download\</default>
+</extension>
+<extension type="w3x">
+  <default>%WC3_INSTALL_PATH%\maps\download\</default>
+</extension>
+<!-- Warcraft 3 Replays-->
+<extension type="w3g">
+  <default>%WC3_INSTALL_PATH%\replay\</default>
+</extension>
+  
 </extensions>

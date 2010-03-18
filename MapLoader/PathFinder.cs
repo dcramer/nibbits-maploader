@@ -17,7 +17,7 @@ namespace MapLoader
     class PathFinder
     {
 
-        private Dictionary<string, string> dictPathIdentifiers;
+        public Dictionary<string, string> dictPathIdentifiers;
 
         public PathFinder()
         {
@@ -50,9 +50,10 @@ namespace MapLoader
             // STARCRAFT II
             // =======================================
             // Install Path + add modifyregistry
+
             string pathToStarcraft2Folder = "";
             ModifyRegistry mysc2Registry = new ModifyRegistry();
-            mysc2Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
+            mysc2Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft II\\";
             mysc2Registry.ShowError = true;
 
             // 1a. Try Registry LocalMachine
@@ -91,7 +92,8 @@ namespace MapLoader
             // (no registry key to my knowledge)
             // ^-- (well there is!)
             // =======================================
-            //
+            //Installpath + modify reg
+
             string pathToStarcraft1Folder = "";
             ModifyRegistry mysc1Registry = new ModifyRegistry();
             mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
@@ -121,39 +123,46 @@ namespace MapLoader
             }
 
             dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", pathToStarcraft1Folder);
+
+
+            //=====================
+            //Warcraft 3
+            //=====================
+            //Install path + modifyreg
+
+            string pathToWarcraft3Folder = "";
+            ModifyRegistry mywc3Registry = new ModifyRegistry();
+            mywc3Registry.SubKey = "Software\\Blizzard Entertainment\\Warcraft III\\";
+            mywc3Registry.ShowError = true;
+
+            // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
+            pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
+
+            // 1b. Try Registry CurrentUser
+            if (pathToWarcraft3Folder == null)
+            {
+                mywc3Registry.BaseRegistryKey = Registry.CurrentUser;
+                pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
+            }
+
+            if (pathToWarcraft3Folder == null)
+            {
+                pathToWarcraft3Folder = "";
+            }
+
+            dictPathIdentifiers.Add("%WC3_INSTALL_PATH%", pathToWarcraft3Folder);
+
         }
 
         
         public string GetPath(string pathIdentifier)
         {
-            if (dictPathIdentifiers.ContainsKey(pathIdentifier)) return dictPathIdentifiers[pathIdentifier];
+            if (dictPathIdentifiers.ContainsKey(pathIdentifier))
+            {
+                string path = dictPathIdentifiers[pathIdentifier];
+                return path;
+            }
             else return "";
         }
-
-
-        // TRY TO READ REGISTRY FOR SC2 KEY (THIS IS NOT NEEDED ANYMORE)
-        private string GetRegistryValueFromLocalMachine(string key, string value)
-        {
-            RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(key);
-            string retVal = "";
-            if (registryKey != null)
-            {
-                retVal = registryKey.GetValue(value).ToString();
-            }
-
-            RegistryKey registryKeyCurrent = Registry.CurrentUser.OpenSubKey(key);
-            if (registryKeyCurrent != null)
-            {
-                retVal = registryKeyCurrent.GetValue(value).ToString();
-            }
-
-            else
-            {
-                return null;
-            }
-            registryKey.Close();
-            return retVal;
-        }
-
     }
 }
