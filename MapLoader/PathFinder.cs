@@ -51,107 +51,115 @@ namespace MapLoader
             // =======================================
             // Install Path + add modifyregistry
 
-            string pathToStarcraft2Folder = "";
-            ModifyRegistry mysc2Registry = new ModifyRegistry();
-            mysc2Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft II\\";
-            mysc2Registry.ShowError = true;
-
-            // 1a. Try Registry LocalMachine
-            pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
-
-            // 1b. Try Registry CurrentUser
-            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+            if (string.IsNullOrEmpty(ClientSettings.Default.SC2_INSTALL_PATH))
             {
-                mysc2Registry.BaseRegistryKey = Registry.CurrentUser;
+                string pathToStarcraft2Folder = "";
+                ModifyRegistry mysc2Registry = new ModifyRegistry();
+                mysc2Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft II\\";
+                mysc2Registry.ShowError = true;
+
+                // 1a. Try Registry LocalMachine
                 pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
-            }
 
-            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
-            {
-                pathToStarcraft2Folder = "";
-            }
+                // 1b. Try Registry CurrentUser
+                if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+                {
+                    mysc2Registry.BaseRegistryKey = Registry.CurrentUser;
+                    pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
+                }
 
-            // 2. Try Default Path
-            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
-            {
-                string sc2_defaultPath = pathToProgramFiles + "/" + "StarCraft II/";
-                if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = sc2_defaultPath;
-            }
+                if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+                {
+                    pathToStarcraft2Folder = "";
+                }
 
-            // 3. Try Default Path (Beta)
-            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
-            {
-                string defaultPath = pathToProgramFiles + "/" + "StarCraft II Beta/";
-                if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = defaultPath;
-            }
+                // 2. Try Default Path
+                if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+                {
+                    string sc2_defaultPath = pathToProgramFiles + "/" + "StarCraft II/";
+                    if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = sc2_defaultPath;
+                }
 
-            dictPathIdentifiers.Add("%SC2_INSTALL_PATH%", pathToStarcraft2Folder);
+                // 3. Try Default Path (Beta)
+                if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+                {
+                    string defaultPath = pathToProgramFiles + "/" + "StarCraft II Beta/";
+                    if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = defaultPath;
+                }
+                ClientSettings.Default.SC2_INSTALL_PATH = pathToStarcraft2Folder;
+            }
+            dictPathIdentifiers.Add("%SC2_INSTALL_PATH%", ClientSettings.Default.SC2_INSTALL_PATH);
+            
 
             // =======================================
             // STARCRAFT I
-            // (no registry key to my knowledge)
-            // ^-- (well there is!)
             // =======================================
-            //Installpath + modify reg
 
-            string pathToStarcraft1Folder = "";
-            ModifyRegistry mysc1Registry = new ModifyRegistry();
-            mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
-            mysc1Registry.ShowError = true;
-
-            // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
-            pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
-
-            // 1b. Try Registry CurrentUser
-            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
+            if (string.IsNullOrEmpty(ClientSettings.Default.SC1_INSTALL_PATH))
             {
-                mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
+                string pathToStarcraft1Folder = "";
+                ModifyRegistry mysc1Registry = new ModifyRegistry();
+                mysc1Registry.SubKey = "Software\\Blizzard Entertainment\\Starcraft\\";
+                mysc1Registry.ShowError = true;
+
+                // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
                 pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
+
+                // 1b. Try Registry CurrentUser
+                if (string.IsNullOrEmpty(pathToStarcraft1Folder))
+                {
+                    mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
+                    pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
+                }
+
+                if (string.IsNullOrEmpty(pathToStarcraft1Folder))
+                {
+                    pathToStarcraft1Folder = "";
+                }
+
+                // 2. Try Default Path
+                if (string.IsNullOrEmpty(pathToStarcraft1Folder))
+                {
+                    string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
+
+                    if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
+                }
+                ClientSettings.Default.SC1_INSTALL_PATH = pathToStarcraft1Folder;
             }
-
-            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
-            {
-                pathToStarcraft1Folder = "";
-            }
-
-            // 2. Try Default Path
-            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
-            {
-                string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
-
-                if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
-            }
-
-            dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", pathToStarcraft1Folder);
-
+            dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", ClientSettings.Default.SC1_INSTALL_PATH);
+            
 
             //=====================
             //Warcraft 3
             //=====================
-            //Install path + modifyreg
 
-            string pathToWarcraft3Folder = "";
-            ModifyRegistry mywc3Registry = new ModifyRegistry();
-            mywc3Registry.SubKey = "Software\\Blizzard Entertainment\\Warcraft III\\";
-            mywc3Registry.ShowError = true;
-
-            // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
-            pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
-
-            // 1b. Try Registry CurrentUser
-            if (string.IsNullOrEmpty(pathToWarcraft3Folder))
+            if (string.IsNullOrEmpty(ClientSettings.Default.WC3_INSTALL_PATH))
             {
-                mywc3Registry.BaseRegistryKey = Registry.CurrentUser;
+                string pathToWarcraft3Folder = "";
+                ModifyRegistry mywc3Registry = new ModifyRegistry();
+                mywc3Registry.SubKey = "Software\\Blizzard Entertainment\\Warcraft III\\";
+                mywc3Registry.ShowError = true;
+
+                // 1a. Try Registry LocalMachine (no idea if localmachine is used, dont think so, but i let it stay)
                 pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
+
+                // 1b. Try Registry CurrentUser
+                if (string.IsNullOrEmpty(pathToWarcraft3Folder))
+                {
+                    mywc3Registry.BaseRegistryKey = Registry.CurrentUser;
+                    pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
+                }
+
+                if (string.IsNullOrEmpty(pathToWarcraft3Folder))
+                {
+                    pathToWarcraft3Folder = "";
+                }
+                ClientSettings.Default.WC3_INSTALL_PATH = pathToWarcraft3Folder;
             }
+            dictPathIdentifiers.Add("%WC3_INSTALL_PATH%", ClientSettings.Default.WC3_INSTALL_PATH);
 
-            if (string.IsNullOrEmpty(pathToWarcraft3Folder))
-            {
-                pathToWarcraft3Folder = "";
-            }
-
-            dictPathIdentifiers.Add("%WC3_INSTALL_PATH%", pathToWarcraft3Folder);
-
+            // TODO: this isnt always nescesary
+            ClientSettings.Default.Save();
         }
 
         

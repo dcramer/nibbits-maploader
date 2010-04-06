@@ -22,7 +22,12 @@ namespace MapLoader
 
         private void btn_ok_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            ClientSettings.Default.SC1_INSTALL_PATH = tb_sc1dir.Text;
+            ClientSettings.Default.SC2_INSTALL_PATH = tb_sc2dir.Text;
+            ClientSettings.Default.WC3_INSTALL_PATH = tb_wc3dir.Text;
+            ClientSettings.Default.Save();
+            this.Close();
+            // Application.Exit();
         }
 
         private void Formsetup_Load(object sender, EventArgs e)

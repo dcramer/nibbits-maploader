@@ -18,15 +18,16 @@ namespace MapLoader
         ExtensionConfiguration extConf;
         PathFinder pathFinder;
         Uri fileUri;
+        string fileLink;
 
-        public LoaderForm()
+        public LoaderForm(string fileLink)
         {
+            this.fileLink = fileLink;
             InitializeComponent(); 
         }
 
         private void LoaderForm_Load(object sender, EventArgs e)
         {
-            
             // ==========================================================
             // Reading XML Extension Config
             // ==========================================================
@@ -43,69 +44,56 @@ namespace MapLoader
             // ==========================================================
             // Start Download
             // ==========================================================
-            try
+            WebRequest wrGETURL;
+            wrGETURL = WebRequest.Create(this.fileLink);
+
+            HttpWebResponse resp = (HttpWebResponse)wrGETURL.GetResponse();
+            int statusCode = (int)resp.StatusCode;
+
+            // ==========================================================
+            // Check Status Code
+            // ==========================================================
+            if (statusCode == 200)
             {
-
-                string link = Program.NIBBITS_LINK.Replace("nibbits://", "http://");
-
-                WebRequest wrGETURL;
-                wrGETURL = WebRequest.Create(link);
-
-                HttpWebResponse resp = (HttpWebResponse)wrGETURL.GetResponse();
-                int statusCode = (int)resp.StatusCode;
-
+                // Construct URI
+                fileUri = resp.ResponseUri;
                 // ==========================================================
-                // Check Status Code
+                // Check Extension
                 // ==========================================================
-                if (statusCode == 200)
+                string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
+                string extension = Path.GetExtension(fileName).ToLower().Substring(1);
+
+                if (extConf.IsValidExtension(extension))
                 {
-                    // Construct URI
-                    fileUri = resp.ResponseUri;
-                    // ==========================================================
-                    // Check Extension
-                    // ==========================================================
-                    string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
-                    string extension = Path.GetExtension(fileName).ToLower().Substring(1);
+                    lblFilename.Text = fileName; // Display filename
 
-                    if (extConf.IsValidExtension(extension))
+                    //ask user if they want to download file
+                    if (MessageBox.Show("Do you want to download " + fileName, "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        lblFilename.Text = fileName; // Display filename
-
-                        //ask user if they want to download file
-                        if (MessageBox.Show("Do you want to download " + fileName, "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            // a 'DialogResult.Yes' value was returned from the MessageBox
-                            bgWorker.RunWorkerAsync();
-                        }
-                        else
-                        {
-                            Application.Exit();
-                        }
-
+                        // a 'DialogResult.Yes' value was returned from the MessageBox
+                        bgWorker.RunWorkerAsync();
                     }
-                    
                     else
                     {
-                        // No action for this Extension defined
-                        // Either link is broken or someone tampered with the XML
-
-                        // Quit application, maybe should do something better, like pop-up a message, but
-                        // that would be annoying too.. so lets just exit here...
-                        // or not. waiting for program to do nothing then quit is stupid
-                        // show user a popup!
-                        MessageBox.Show("Error!", "Timeout!", MessageBoxButtons.OK);
-                        Application.Exit(); 
+                        Application.Exit();
                     }
+
                 }
+                
+                else
+                {
+                    // No action for this Extension defined
+                    // Either link is broken or someone tampered with the XML
 
+                    // Quit application, maybe should do something better, like pop-up a message, but
+                    // that would be annoying too.. so lets just exit here...
+                    // or not. waiting for program to do nothing then quit is stupid
+                    // show user a popup!
+                    MessageBox.Show("Error!", "Timeout!", MessageBoxButtons.OK);
+                    Application.Exit(); 
+                }
             }
-            catch (Exception ex)
-            {                
-                Console.WriteLine(ex.ToString());
-                Application.Exit();
-            }; 
         }
-
 
         // ==========================================================
         // Downloads the File
@@ -206,23 +194,10 @@ namespace MapLoader
                 // to the real Path
                 // ==============================================
                 // 1. Check if PathFinder know our Path
-                string realPath = "";
-
-                switch (pathIdentfier)
-                {
-                    case "WC3_INSTALL_PATH":
-                        realPath = MapLoader.ClientSettings.Default.WC3_INSTALL_PATH;
-                        break;
-                    case "SC1_INSTALL_PATH":
-                        realPath = MapLoader.ClientSettings.Default.SC1_INSTALL_PATH;
-                        break;
-                    case "SC2_INSTALL_PATH":
-                        realPath = MapLoader.ClientSettings.Default.SC2_INSTALL_PATH;
-                        break;
-                }
+                string realPath = pathFinder.GetPath(pathIdentfier);
 
                 // 3. Still no path, query the user for setup
-                if (realPath == "")
+                if (string.IsNullOrEmpty(realPath))
                 {
                     if (MessageBox.Show("No path was found to save " + fileName + " to. Do you want to go to setup?", "No path found!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
@@ -231,37 +206,23 @@ namespace MapLoader
                         setup.SetApartmentState(ApartmentState.STA);
                         setup.Start();
                         setup.Join();
-                        //RESTART APPLICATION
-                        //TODO: the same arguments need to be returned.
-
-                        // Get the parameters/arguments passed to program if any
-                        string arguments = string.Empty;
-                        string[] args = Environment.GetCommandLineArgs();
-                        for (int i = 1; i < args.Length; i++) // args[0] is always exe path/filename
-                            arguments += args[i] + " ";
-
-
-                        Application.Exit();
-                        System.Diagnostics.Process.Start(Application.ExecutablePath, arguments);
                     }
 
                     realPath = pathFinder.GetPath(pathIdentfier);
                 }
 
                 // 4. Still no path?? Okay lets just save the file somewhere else
-                if (realPath == "")
+                if (string.IsNullOrEmpty(realPath))
                 {
                     moveTo = "";
                     break;
                 }
 
-
                 moveTo = moveTo.Replace(pathIdentfier, realPath);
-
             }
 
 
-            if (moveTo != "")
+            if (!string.IsNullOrEmpty(moveTo))
             {
                 if (!File.Exists(moveTo + "/" + fileName))
                 {

@@ -70,27 +70,27 @@
             this.lbl_sc1dir.AutoSize = true;
             this.lbl_sc1dir.Location = new System.Drawing.Point(12, 13);
             this.lbl_sc1dir.Name = "lbl_sc1dir";
-            this.lbl_sc1dir.Size = new System.Drawing.Size(103, 13);
+            this.lbl_sc1dir.Size = new System.Drawing.Size(96, 13);
             this.lbl_sc1dir.TabIndex = 3;
-            this.lbl_sc1dir.Text = "Current Starcraft Dir:";
+            this.lbl_sc1dir.Text = "StarCraft Directory:";
             // 
             // lbl_sc2dir
             // 
             this.lbl_sc2dir.AutoSize = true;
             this.lbl_sc2dir.Location = new System.Drawing.Point(12, 56);
             this.lbl_sc2dir.Name = "lbl_sc2dir";
-            this.lbl_sc2dir.Size = new System.Drawing.Size(112, 13);
+            this.lbl_sc2dir.Size = new System.Drawing.Size(105, 13);
             this.lbl_sc2dir.TabIndex = 4;
-            this.lbl_sc2dir.Text = "Current Starcraft II Dir:";
+            this.lbl_sc2dir.Text = "StarCraft II Directory:";
             // 
             // lbl_wc3dir
             // 
             this.lbl_wc3dir.AutoSize = true;
             this.lbl_wc3dir.Location = new System.Drawing.Point(12, 100);
             this.lbl_wc3dir.Name = "lbl_wc3dir";
-            this.lbl_wc3dir.Size = new System.Drawing.Size(116, 13);
+            this.lbl_wc3dir.Size = new System.Drawing.Size(109, 13);
             this.lbl_wc3dir.TabIndex = 5;
-            this.lbl_wc3dir.Text = "Current Warcraft III Dir:";
+            this.lbl_wc3dir.Text = "WarCraft III Directory:";
             // 
             // btn_sc1dir
             // 
@@ -124,7 +124,7 @@
             // 
             // btn_ok
             // 
-            this.btn_ok.Location = new System.Drawing.Point(145, 147);
+            this.btn_ok.Location = new System.Drawing.Point(140, 146);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(75, 23);
             this.btn_ok.TabIndex = 9;
@@ -136,11 +136,11 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // Formsetup
+            // LoaderConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(365, 182);
+            this.ClientSize = new System.Drawing.Size(362, 181);
             this.Controls.Add(this.btn_ok);
             this.Controls.Add(this.btn_wc3dir);
             this.Controls.Add(this.btn_sc2dir);
@@ -151,8 +151,8 @@
             this.Controls.Add(this.tb_wc3dir);
             this.Controls.Add(this.tb_sc2dir);
             this.Controls.Add(this.tb_sc1dir);
-            this.Name = "Formsetup";
-            this.Text = "Setup";
+            this.Name = "LoaderConfig";
+            this.Text = "Nibbler Setup";
             this.Load += new System.EventHandler(this.Formsetup_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
