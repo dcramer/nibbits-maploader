@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-namespace MapLoader
+namespace Nibbler
 {
     public partial class LoaderConfig : Form
     {

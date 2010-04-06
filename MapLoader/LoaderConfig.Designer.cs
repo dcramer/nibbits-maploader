@@ -1,4 +1,4 @@
-﻿namespace MapLoader
+﻿namespace Nibbler
 {
     partial class LoaderConfig
     {

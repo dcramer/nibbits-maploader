@@ -11,7 +11,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Threading;
 
-namespace MapLoader
+namespace Nibbler
 {
     public partial class LoaderForm : Form
     {

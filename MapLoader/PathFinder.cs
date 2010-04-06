@@ -8,7 +8,7 @@ using System.Xml;
 using System.Windows.Forms;
 using Utility.ModifyRegistry;
 
-namespace MapLoader
+namespace Nibbler
 {
     /// <summary>
     /// This class trys to automatically find pathes to game folders etc and
@@ -186,8 +186,8 @@ namespace MapLoader
                     {
                         returnValue = form.openFileDialog1.FileName;
                         returnValue = returnValue.ToLower().Replace("starcraft.exe", "");
-                        MapLoader.ClientSettings.Default.SC1_INSTALL_PATH = returnValue;
-                        MapLoader.ClientSettings.Default.Save();
+                        Nibbler.ClientSettings.Default.SC1_INSTALL_PATH = returnValue;
+                        Nibbler.ClientSettings.Default.Save();
                         dictPathIdentifiers.Remove(pathIdentifier);
                         dictPathIdentifiers.Add(pathIdentifier, returnValue);
                     }
@@ -201,8 +201,8 @@ namespace MapLoader
                     {
                         returnValue = form.openFileDialog1.FileName;
                         returnValue = returnValue.ToLower().Replace("warcraft iii.exe", "");
-                        MapLoader.ClientSettings.Default.WC3_INSTALL_PATH = returnValue;
-                        MapLoader.ClientSettings.Default.Save();
+                        Nibbler.ClientSettings.Default.WC3_INSTALL_PATH = returnValue;
+                        Nibbler.ClientSettings.Default.Save();
                         dictPathIdentifiers.Remove(pathIdentifier);
                         dictPathIdentifiers.Add(pathIdentifier, returnValue);
                     }
@@ -216,8 +216,8 @@ namespace MapLoader
                     {
                         returnValue = form.openFileDialog1.FileName;
                         returnValue = returnValue.ToLower().Replace("starcraft ii.exe", "");
-                        MapLoader.ClientSettings.Default.SC2_INSTALL_PATH = returnValue;
-                        MapLoader.ClientSettings.Default.Save();
+                        Nibbler.ClientSettings.Default.SC2_INSTALL_PATH = returnValue;
+                        Nibbler.ClientSettings.Default.Save();
                         dictPathIdentifiers.Remove(pathIdentifier);
                         dictPathIdentifiers.Add(pathIdentifier, returnValue);
                     }

@@ -6,7 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Windows.Forms;
 
-namespace MapLoader
+namespace Nibbler
 {
     class ExtensionConfiguration
     {

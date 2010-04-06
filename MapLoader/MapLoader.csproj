@@ -8,8 +8,8 @@
     <ProjectGuid>{B0D33570-5487-4F92-AC9F-D568215045BA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MapLoader</RootNamespace>
-    <AssemblyName>MapLoader</AssemblyName>
+    <RootNamespace>Nibbler</RootNamespace>
+    <AssemblyName>Nibbler</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -89,6 +89,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="ClientSettings.settings">
