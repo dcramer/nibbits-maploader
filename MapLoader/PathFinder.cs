@@ -86,6 +86,13 @@ namespace Nibbler
                     string defaultPath = pathToProgramFiles + "/" + "StarCraft II Beta/";
                     if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = defaultPath;
                 }
+
+                // 4. Default to empty path
+                if (string.IsNullOrEmpty(pathToStarcraft2Folder))
+                {
+                    pathToStarcraft2Folder = "";
+                }
+
                 ClientSettings.Default.SC2_INSTALL_PATH = pathToStarcraft2Folder;
             }
             dictPathIdentifiers.Add("%SC2_INSTALL_PATH%", ClientSettings.Default.SC2_INSTALL_PATH);
@@ -124,6 +131,12 @@ namespace Nibbler
 
                     if (File.Exists(pathToProgramFiles + "StarCraft.exe")) pathToStarcraft1Folder = sc1_defaultPath;
                 }
+
+                // 3. Default to empty path
+                if (string.IsNullOrEmpty(pathToStarcraft1Folder))
+                {
+                    pathToStarcraft1Folder = "";
+                }
                 ClientSettings.Default.SC1_INSTALL_PATH = pathToStarcraft1Folder;
             }
             dictPathIdentifiers.Add("%SC1_INSTALL_PATH%", ClientSettings.Default.SC1_INSTALL_PATH);
@@ -154,6 +167,7 @@ namespace Nibbler
                 {
                     pathToWarcraft3Folder = "";
                 }
+
                 ClientSettings.Default.WC3_INSTALL_PATH = pathToWarcraft3Folder;
             }
             dictPathIdentifiers.Add("%WC3_INSTALL_PATH%", ClientSettings.Default.WC3_INSTALL_PATH);

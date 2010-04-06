@@ -40,7 +40,6 @@ namespace Nibbler
             pathFinder = new PathFinder();
             pathFinder.GatherPathes();
 
-
             // ==========================================================
             // Start Download
             // ==========================================================
@@ -60,15 +59,23 @@ namespace Nibbler
                 // ==========================================================
                 // Check Extension
                 // ==========================================================
-                string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
-                string extension = Path.GetExtension(fileName).ToLower().Substring(1);
+                string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
+                string extension = Path.GetExtension(fileName);
+
+                if (string.IsNullOrEmpty(extension))
+                {
+                    MessageBox.Show("The link you followed cannot be handled by Nibbler.", "Nibbler Error", MessageBoxButtons.OK);
+                    Application.Exit();
+                }
+
+                extension = extension.ToLower().Substring(1);
 
                 if (extConf.IsValidExtension(extension))
                 {
                     lblFilename.Text = fileName; // Display filename
 
                     //ask user if they want to download file
-                    if (MessageBox.Show("Do you want to download " + fileName, "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Do you want to download " + fileName + "?", "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // a 'DialogResult.Yes' value was returned from the MessageBox
                         bgWorker.RunWorkerAsync();
@@ -89,7 +96,7 @@ namespace Nibbler
                     // that would be annoying too.. so lets just exit here...
                     // or not. waiting for program to do nothing then quit is stupid
                     // show user a popup!
-                    MessageBox.Show("Error!", "Timeout!", MessageBoxButtons.OK);
+                    MessageBox.Show("Nibbler does not handle files of type " + extension.ToUpper() + ".", "Nibbler Error", MessageBoxButtons.OK);
                     Application.Exit(); 
                 }
             }
@@ -103,7 +110,7 @@ namespace Nibbler
             // the URL to download the file from
             string sUrlToReadFileFrom = fileUri.OriginalString;
             // the path to write the file to
-            string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
+            string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
             string sFilePathToWriteFileTo = Path.GetTempPath() + "/" + fileName;
 
             // first, we need to get the exact size (in bytes) of the file we are downloading
@@ -169,7 +176,7 @@ namespace Nibbler
         // ==========================================================
         private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string fileName = fileUri.Segments[fileUri.Segments.Length - 1];
+            string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
             string extension = Path.GetExtension(fileName).ToLower().Substring(1);
             
             // Move
@@ -196,31 +203,41 @@ namespace Nibbler
                 // 1. Check if PathFinder know our Path
                 string realPath = pathFinder.GetPath(pathIdentfier);
 
+                
+
                 // 3. Still no path, query the user for setup
                 if (string.IsNullOrEmpty(realPath))
                 {
-                    if (MessageBox.Show("No path was found to save " + fileName + " to. Do you want to go to setup?", "No path found!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Missing installation path for " + fileName + ". Would you like configure Nibbler now?", "No path found!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // open setup if user say yes
                         System.Threading.Thread setup = new System.Threading.Thread(new System.Threading.ThreadStart(ThreadProc));
                         setup.SetApartmentState(ApartmentState.STA);
                         setup.Start();
                         setup.Join();
-                    }
 
-                    realPath = pathFinder.GetPath(pathIdentfier);
+                        realPath = pathFinder.GetPath(pathIdentfier);
+                    }
                 }
 
                 // 4. Still no path?? Okay lets just save the file somewhere else
                 if (string.IsNullOrEmpty(realPath))
                 {
                     moveTo = "";
-                    break;
                 }
 
                 moveTo = moveTo.Replace(pathIdentfier, realPath);
             }
 
+            if (string.IsNullOrEmpty(moveTo))
+            {
+                SaveFileDialog fileDialog = new SaveFileDialog();
+                fileDialog.FileName = fileName;
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    moveTo = fileDialog.FileName.Replace("\\" + fileName, "");
+                }
+            }
 
             if (!string.IsNullOrEmpty(moveTo))
             {

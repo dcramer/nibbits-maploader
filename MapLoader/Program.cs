@@ -16,26 +16,23 @@ namespace Nibbler
         [STAThread]
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+            /*if (args.Length == 0)
             {
                 Application.Run(new LoaderConfig());
                 Application.Exit();
                 return;
             }
 
-            string link = args[0];
-            //string link = "nibbits://wc3.nibbits.com/maps/get/131603/"
-            
+            string link = args[0];*/
+            //string link = "nibbits://wc3.nibbits.com/maps/get/131603/";
+            //string link = "nibbits://sc2.nibbits.com/maps/get/132027/";
+            string link = "nibbits://sc.nibbits.com/maps/get/131761/";
+
             link = link.Replace("nibbits://", "http://");
-            
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoaderForm(link));
-        }
-
-
-        static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
-        {
         }
     }
 }
