@@ -164,5 +164,58 @@ namespace MapLoader
             }
             else return "";
         }
+
+        public string QueryUserForPath(LoaderConfig form, string pathIdentifier)
+        {
+            string returnValue = "";
+            switch (pathIdentifier)
+            {
+                case "%SC1_INSTALL_PATH%":
+                    form.openFileDialog1.CheckFileExists = true;
+                    form.openFileDialog1.Filter = "Starcraft.exe|Starcraft.exe";
+                    form.openFileDialog1.FileName = "Starcraft.exe";
+                    if (form.openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        returnValue = form.openFileDialog1.FileName;
+                        returnValue = returnValue.ToLower().Replace("starcraft.exe", "");
+                        MapLoader.ClientSettings.Default.SC1_INSTALL_PATH = returnValue;
+                        MapLoader.ClientSettings.Default.Save();
+                        dictPathIdentifiers.Remove(pathIdentifier);
+                        dictPathIdentifiers.Add(pathIdentifier, returnValue);
+                    }
+                    break;
+
+                case "%WC3_INSTALL_PATH%":
+                    form.openFileDialog1.CheckFileExists = true;
+                    form.openFileDialog1.Filter = "Warcraft III.exe|Warcraft III.exe";
+                    form.openFileDialog1.FileName = "Warcraft III.exe";
+                    if (form.openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        returnValue = form.openFileDialog1.FileName;
+                        returnValue = returnValue.ToLower().Replace("warcraft iii.exe", "");
+                        MapLoader.ClientSettings.Default.WC3_INSTALL_PATH = returnValue;
+                        MapLoader.ClientSettings.Default.Save();
+                        dictPathIdentifiers.Remove(pathIdentifier);
+                        dictPathIdentifiers.Add(pathIdentifier, returnValue);
+                    }
+                    break;
+
+                case "%SC2_INSTALL_PATH%":
+                    form.openFileDialog1.CheckFileExists = true;
+                    form.openFileDialog1.Filter = "Starcraft II.exe|Starcraft II.exe";
+                    form.openFileDialog1.FileName = "Starcraft II.exe";
+                    if (form.openFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        returnValue = form.openFileDialog1.FileName;
+                        returnValue = returnValue.ToLower().Replace("starcraft ii.exe", "");
+                        MapLoader.ClientSettings.Default.SC2_INSTALL_PATH = returnValue;
+                        MapLoader.ClientSettings.Default.Save();
+                        dictPathIdentifiers.Remove(pathIdentifier);
+                        dictPathIdentifiers.Add(pathIdentifier, returnValue);
+                    }
+                    break;
+            }
+            return returnValue;
+        }
     }
 }

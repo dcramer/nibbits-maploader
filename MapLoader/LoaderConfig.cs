@@ -10,13 +10,12 @@ using System.IO;
 
 namespace MapLoader
 {
-    public partial class Formsetup : Form
+    public partial class LoaderConfig : Form
     {
         ExtensionConfiguration extConf;
         PathFinder pathFinder;
-        PathUserDefined pathUser;
 
-        public Formsetup()
+        public LoaderConfig()
         {
             InitializeComponent();
         }
@@ -39,34 +38,30 @@ namespace MapLoader
             // ==========================================================
             pathFinder = new PathFinder();
             pathFinder.GatherPathes();
-            pathUser = new PathUserDefined();
 
             //Check if we know our dirs
-            string sc1 = pathFinder.GetPath("%SC1_INSTALL_PATH%");
-            tb_sc1dir.Text = sc1;
+            tb_sc1dir.Text = pathFinder.GetPath("%SC1_INSTALL_PATH%");
 
-            string sc2 = pathFinder.GetPath("%SC2_INSTALL_PATH%");
-            tb_sc2dir.Text = sc2;
+            tb_sc2dir.Text = pathFinder.GetPath("%SC2_INSTALL_PATH%");
 
-            string wc3 = pathFinder.GetPath("%WC3_INSTALL_PATH%");
-            tb_wc3dir.Text = wc3;
+            tb_wc3dir.Text = pathFinder.GetPath("%WC3_INSTALL_PATH%");
         }
 
         private void btn_sc1dir_Click(object sender, EventArgs e)
         {
-            string sc1 = pathUser.QueryUserForPath(this, "%SC1_INSTALL_PATH%");
+            string sc1 = pathFinder.QueryUserForPath(this, "%SC1_INSTALL_PATH%");
             tb_sc1dir.Text = sc1;
         }
 
         private void btn_sc2dir_Click(object sender, EventArgs e)
         {
-            string sc2 = pathUser.QueryUserForPath(this, "%SC2_INSTALL_PATH%");
+            string sc2 = pathFinder.QueryUserForPath(this, "%SC2_INSTALL_PATH%");
             tb_sc2dir.Text = sc2;
         }
 
         private void btn_wc3dir_Click(object sender, EventArgs e)
         {
-            string wc3 = pathUser.QueryUserForPath(this, "%WC3_INSTALL_PATH%");
+            string wc3 = pathFinder.QueryUserForPath(this, "%WC3_INSTALL_PATH%");
             tb_wc3dir.Text = wc3;
         }
     }

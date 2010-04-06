@@ -18,7 +18,7 @@ namespace MapLoader
         {
             if (args.Length == 0)
             {
-                Application.Run(new Formsetup());
+                Application.Run(new LoaderConfig());
                 Application.Exit();
                 return;
             }
@@ -31,7 +31,7 @@ namespace MapLoader
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new LoaderForm());
         }
     }
 }

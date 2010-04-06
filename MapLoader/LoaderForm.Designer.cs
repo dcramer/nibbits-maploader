@@ -1,6 +1,6 @@
 ﻿namespace MapLoader
 {
-    partial class Form1
+    partial class LoaderForm
     {
         /// <summary>
         /// Required designer variable.

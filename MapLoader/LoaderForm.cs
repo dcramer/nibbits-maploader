@@ -13,14 +13,13 @@ using System.Threading;
 
 namespace MapLoader
 {
-    public partial class Form1 : Form
+    public partial class LoaderForm : Form
     {
         ExtensionConfiguration extConf;
         PathFinder pathFinder;
-        PathUserDefined pathUser;
         Uri fileUri;
 
-        public Form1()
+        public LoaderForm()
         {
             InitializeComponent(); 
         }
@@ -39,7 +38,6 @@ namespace MapLoader
             // ==========================================================
             pathFinder = new PathFinder();
             pathFinder.GatherPathes();
-            pathUser = new PathUserDefined();
 
 
             // ==========================================================
@@ -208,13 +206,21 @@ namespace MapLoader
                 // to the real Path
                 // ==============================================
                 // 1. Check if PathFinder know our Path
-                string realPath = pathFinder.GetPath(pathIdentfier);
+                string realPath = "";
 
-                // 2. Check if user has defined a custom path
-                if (realPath == "")
+                switch (pathIdentfier)
                 {
-                    realPath = pathUser.GetPath(pathIdentfier);
+                    case "WC3_INSTALL_PATH":
+                        realPath = MapLoader.ClientSettings.Default.WC3_INSTALL_PATH;
+                        break;
+                    case "SC1_INSTALL_PATH":
+                        realPath = MapLoader.ClientSettings.Default.SC1_INSTALL_PATH;
+                        break;
+                    case "SC2_INSTALL_PATH":
+                        realPath = MapLoader.ClientSettings.Default.SC2_INSTALL_PATH;
+                        break;
                 }
+
                 // 3. Still no path, query the user for setup
                 if (realPath == "")
                 {
@@ -281,7 +287,7 @@ namespace MapLoader
 
         public static void ThreadProc()
         {
-            Application.Run(new Formsetup());
+            Application.Run(new LoaderConfig());
         }
     }
 }

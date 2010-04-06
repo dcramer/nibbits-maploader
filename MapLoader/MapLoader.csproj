@@ -48,30 +48,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ClientSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ExtensionConfiguration.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="LoaderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="LoaderForm.Designer.cs">
+      <DependentUpon>LoaderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formsetup.cs">
+    <Compile Include="LoaderConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Formsetup.Designer.cs">
-      <DependentUpon>Formsetup.cs</DependentUpon>
+    <Compile Include="LoaderConfig.Designer.cs">
+      <DependentUpon>LoaderConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="ModifyRegistry.cs" />
     <Compile Include="PathFinder.cs" />
-    <Compile Include="PathUserDefined.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="LoaderForm.resx">
+      <DependentUpon>LoaderForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Formsetup.resx">
-      <DependentUpon>Formsetup.cs</DependentUpon>
+    <EmbeddedResource Include="LoaderConfig.resx">
+      <DependentUpon>LoaderConfig.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -83,15 +87,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Properties\Settings.settings">
+    <None Include="app.config" />
+    <None Include="ClientSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>ClientSettings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="extensions.xml">
