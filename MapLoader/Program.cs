@@ -25,7 +25,7 @@ namespace Nibbler
             string link = args[0];
             
             //I recommend relocating "nibbits" somewhere, and adding some logic to register the helper.
-            link = link.Replace(link.Substring(0, "nibbits".Length), "http");
+            link = link.Replace(link.Substring(0, "nibbler".Length), "http");
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

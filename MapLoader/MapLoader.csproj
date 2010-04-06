@@ -106,6 +106,7 @@
   <ItemGroup>
     <Content Include="extensions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="nibbits.ico" />
     <None Include="loader.reg" />

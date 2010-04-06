@@ -1,6 +1,6 @@
 <extensions>
 <!-- Starcraft 2 Replays -->
-<extension type="s2replay">
+<extension type="sc2replay">
   <default>%DOCUMENTS%\Starcraft II Beta\Replays\Multiplayer\Recent</default>
   <windows7>%DOCUMENTS%\Starcraft II Beta\Replays\Multiplayer\Recent</windows7>
 </extension>
