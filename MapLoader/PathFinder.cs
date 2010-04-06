@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Microsoft.Win32;
-using System.Xml;
 using System.Windows.Forms;
 using Utility.ModifyRegistry;
 

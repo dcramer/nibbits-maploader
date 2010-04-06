@@ -51,6 +51,7 @@
             // 
             // tb_sc2dir
             // 
+            this.tb_sc2dir.BackColor = System.Drawing.SystemColors.Control;
             this.tb_sc2dir.Location = new System.Drawing.Point(12, 72);
             this.tb_sc2dir.Name = "tb_sc2dir";
             this.tb_sc2dir.ReadOnly = true;
@@ -140,6 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(362, 181);
             this.Controls.Add(this.btn_ok);
             this.Controls.Add(this.btn_wc3dir);

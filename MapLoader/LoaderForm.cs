@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
@@ -238,6 +233,21 @@ namespace Nibbler
 
             if (!string.IsNullOrEmpty(moveTo))
             {
+                if (!Directory.Exists(moveTo))
+                {
+                    if (MessageBox.Show("Your save path is set to " + moveTo + ", but that directory does not exist. Would you like to create it now?", "Directory Not Found", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Directory.CreateDirectory(moveTo);
+                    }
+                    else
+                    {
+                        var fileDialog = new SaveFileDialog { FileName = fileName };
+                        if (fileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            moveTo = fileDialog.FileName.Replace("\\" + fileName, "");
+                        }
+                    }
+                }
                 if (!File.Exists(moveTo + "/" + fileName))
                 {
                     // If the file does not excist. Copy it to the correct folder

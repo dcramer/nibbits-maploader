@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-
-//AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
-//static void UnhandledException(object sender, UnhandledExceptionEventArgs ex);
 
 namespace Nibbler
 {
@@ -16,6 +11,8 @@ namespace Nibbler
         [STAThread]
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(Logger.UnhandledException);
+
             if (args.Length == 0)
             {
                 Application.Run(new LoaderConfig());
