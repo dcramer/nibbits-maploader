@@ -60,26 +60,26 @@ namespace MapLoader
             pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
 
             // 1b. Try Registry CurrentUser
-            if (pathToStarcraft2Folder == null)
+            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
             {
                 mysc2Registry.BaseRegistryKey = Registry.CurrentUser;
                 pathToStarcraft2Folder = mysc2Registry.Read("InstallPath");
             }
 
-            if (pathToStarcraft2Folder == null)
+            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
             {
                 pathToStarcraft2Folder = "";
             }
 
             // 2. Try Default Path
-            if (pathToStarcraft2Folder == "")
+            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
             {
                 string sc2_defaultPath = pathToProgramFiles + "/" + "StarCraft II/";
                 if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = sc2_defaultPath;
             }
 
             // 3. Try Default Path (Beta)
-            if (pathToStarcraft2Folder == "")
+            if (string.IsNullOrEmpty(pathToStarcraft2Folder))
             {
                 string defaultPath = pathToProgramFiles + "/" + "StarCraft II Beta/";
                 if (File.Exists(pathToProgramFiles + "StarCraft II.exe")) pathToStarcraft2Folder = defaultPath;
@@ -103,19 +103,19 @@ namespace MapLoader
             pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
 
             // 1b. Try Registry CurrentUser
-            if (pathToStarcraft1Folder == null)
+            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
             {
                 mysc1Registry.BaseRegistryKey = Registry.CurrentUser;
                 pathToStarcraft1Folder = mysc1Registry.Read("InstallPath");
             }
 
-            if (pathToStarcraft1Folder == null)
+            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
             {
                 pathToStarcraft1Folder = "";
             }
 
             // 2. Try Default Path
-            if (pathToStarcraft1Folder == "")
+            if (string.IsNullOrEmpty(pathToStarcraft1Folder))
             {
                 string sc1_defaultPath = pathToProgramFiles + "/" + "StarCraft/";
 
@@ -139,13 +139,13 @@ namespace MapLoader
             pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
 
             // 1b. Try Registry CurrentUser
-            if (pathToWarcraft3Folder == null)
+            if (string.IsNullOrEmpty(pathToWarcraft3Folder))
             {
                 mywc3Registry.BaseRegistryKey = Registry.CurrentUser;
                 pathToWarcraft3Folder = mywc3Registry.Read("InstallPath");
             }
 
-            if (pathToWarcraft3Folder == null)
+            if (string.IsNullOrEmpty(pathToWarcraft3Folder))
             {
                 pathToWarcraft3Folder = "";
             }
