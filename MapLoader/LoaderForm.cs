@@ -8,22 +8,21 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
-using Microsoft.Win32;
 using System.Threading;
 
 namespace Nibbler
 {
     public partial class LoaderForm : Form
     {
-        ExtensionConfiguration extConf;
-        PathFinder pathFinder;
-        Uri fileUri;
-        string fileLink;
+        ExtensionConfiguration _extConf;
+        PathFinder _pathFinder;
+        Uri _fileUri;
+        readonly string _fileLink;
 
         public LoaderForm(string fileLink)
         {
-            this.fileLink = fileLink;
-            InitializeComponent(); 
+            _fileLink = fileLink;
+            InitializeComponent();
         }
 
         private void LoaderForm_Load(object sender, EventArgs e)
@@ -31,22 +30,21 @@ namespace Nibbler
             // ==========================================================
             // Reading XML Extension Config
             // ==========================================================
-            extConf = new ExtensionConfiguration();
-            extConf.ReadConfig();
+            _extConf = new ExtensionConfiguration();
+            _extConf.ReadConfig();
 
             // ==========================================================
             // Find Pathes for Game Folders etc.
             // ==========================================================
-            pathFinder = new PathFinder();
-            pathFinder.GatherPathes();
+            _pathFinder = new PathFinder();
+            _pathFinder.GatherPathes();
 
             // ==========================================================
             // Start Download
             // ==========================================================
-            WebRequest wrGETURL;
-            wrGETURL = WebRequest.Create(this.fileLink);
+            WebRequest wrGeturl = WebRequest.Create(_fileLink);
 
-            HttpWebResponse resp = (HttpWebResponse)wrGETURL.GetResponse();
+            var resp = (HttpWebResponse)wrGeturl.GetResponse();
             int statusCode = (int)resp.StatusCode;
 
             // ==========================================================
@@ -55,11 +53,11 @@ namespace Nibbler
             if (statusCode == 200)
             {
                 // Construct URI
-                fileUri = resp.ResponseUri;
+                _fileUri = resp.ResponseUri;
                 // ==========================================================
                 // Check Extension
                 // ==========================================================
-                string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
+                string fileName = _fileUri.Segments[_fileUri.Segments.Length - 1].Replace('+', ' ');
                 string extension = Path.GetExtension(fileName);
 
                 if (string.IsNullOrEmpty(extension))
@@ -70,12 +68,12 @@ namespace Nibbler
 
                 extension = extension.ToLower().Substring(1);
 
-                if (extConf.IsValidExtension(extension))
+                if (_extConf.IsValidExtension(extension))
                 {
                     lblFilename.Text = fileName; // Display filename
 
                     //ask user if they want to download file
-                    if (MessageBox.Show("Do you want to download " + fileName + "?", "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(string.Format("Do you want to download {0}?",fileName), "Confirm download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // a 'DialogResult.Yes' value was returned from the MessageBox
                         bgWorker.RunWorkerAsync();
@@ -108,30 +106,30 @@ namespace Nibbler
         private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             // the URL to download the file from
-            string sUrlToReadFileFrom = fileUri.OriginalString;
+            string sUrlToReadFileFrom = _fileUri.OriginalString;
             // the path to write the file to
-            string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
+            string fileName = _fileUri.Segments[_fileUri.Segments.Length - 1].Replace('+', ' ');
             string sFilePathToWriteFileTo = Path.GetTempPath() + "/" + fileName;
 
             // first, we need to get the exact size (in bytes) of the file we are downloading
-            Uri url = new Uri(sUrlToReadFileFrom);
-            System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-            System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+            var url = new Uri(sUrlToReadFileFrom);
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            var response = (HttpWebResponse)request.GetResponse();
             response.Close();
             // gets the size of the file in bytes
-            Int64 iSize = response.ContentLength;
+            long iSize = response.ContentLength;
 
             // keeps track of the total bytes downloaded so we can update the progress bar
-            Int64 iRunningByteTotal = 0;
+            long iRunningByteTotal = 0;
 
             // use the webclient object to download the file
-            using (System.Net.WebClient client = new System.Net.WebClient())
+            using (var client = new WebClient())
             {
                 // open the file at the remote URL for reading
-                using (System.IO.Stream streamRemote = client.OpenRead(new Uri(sUrlToReadFileFrom)))
+                using (var streamRemote = client.OpenRead(new Uri(sUrlToReadFileFrom)))
                 {
                     // using the FileStream object, we can write the downloaded bytes to the file system
-                    using (Stream streamLocal = new FileStream(sFilePathToWriteFileTo, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (var streamLocal = new FileStream(sFilePathToWriteFileTo, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         // loop the stream and get the file into the byte buffer
                         int iByteSize = 0;
@@ -143,8 +141,8 @@ namespace Nibbler
                             iRunningByteTotal += iByteSize;
 
                             // calculate the progress out of a base "100"
-                            double dIndex = (double)(iRunningByteTotal);
-                            double dTotal = (double)byteBuffer.Length;
+                            double dIndex = iRunningByteTotal;
+                            double dTotal = byteBuffer.Length;
                             double dProgressPercentage = (dIndex / dTotal);
                             int iProgressPercentage = (int)(dProgressPercentage * 100);
 
@@ -176,11 +174,11 @@ namespace Nibbler
         // ==========================================================
         private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            string fileName = fileUri.Segments[fileUri.Segments.Length - 1].Replace('+', ' ');
+            string fileName = _fileUri.Segments[_fileUri.Segments.Length - 1].Replace('+', ' ');
             string extension = Path.GetExtension(fileName).ToLower().Substring(1);
             
             // Move
-            string moveTo = extConf.GetCopyPathForExtension(extension);
+            string moveTo = _extConf.GetCopyPathForExtension(extension);
 
             // Construct Path
             while (moveTo.IndexOf("%") != -1)
@@ -201,7 +199,7 @@ namespace Nibbler
                 // to the real Path
                 // ==============================================
                 // 1. Check if PathFinder know our Path
-                string realPath = pathFinder.GetPath(pathIdentfier);
+                string realPath = _pathFinder.GetPath(pathIdentfier);
 
                 
 
@@ -211,12 +209,12 @@ namespace Nibbler
                     if (MessageBox.Show("Missing installation path for " + fileName + ". Would you like configure Nibbler now?", "No path found!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // open setup if user say yes
-                        System.Threading.Thread setup = new System.Threading.Thread(new System.Threading.ThreadStart(ThreadProc));
+                        Thread setup = new Thread(ThreadProc);
                         setup.SetApartmentState(ApartmentState.STA);
                         setup.Start();
                         setup.Join();
 
-                        realPath = pathFinder.GetPath(pathIdentfier);
+                        realPath = _pathFinder.GetPath(pathIdentfier);
                     }
                 }
 
@@ -231,8 +229,7 @@ namespace Nibbler
 
             if (string.IsNullOrEmpty(moveTo))
             {
-                SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.FileName = fileName;
+                var fileDialog = new SaveFileDialog {FileName = fileName};
                 if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
                     moveTo = fileDialog.FileName.Replace("\\" + fileName, "");

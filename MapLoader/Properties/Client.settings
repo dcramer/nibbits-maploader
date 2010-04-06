@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nibbler" GeneratedClassName="ClientSettings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nibbler" GeneratedClassName="Client">
   <Profiles />
   <Settings>
     <Setting Name="SC1_INSTALL_PATH" Type="System.String" Scope="User">

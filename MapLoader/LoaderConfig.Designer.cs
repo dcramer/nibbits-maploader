@@ -100,7 +100,7 @@
             this.btn_sc1dir.TabIndex = 6;
             this.btn_sc1dir.Text = "Change";
             this.btn_sc1dir.UseVisualStyleBackColor = true;
-            this.btn_sc1dir.Click += new System.EventHandler(this.btn_sc1dir_Click);
+            this.btn_sc1dir.Click += new System.EventHandler(this.BtnSc1DirClick);
             // 
             // btn_sc2dir
             // 
@@ -110,7 +110,7 @@
             this.btn_sc2dir.TabIndex = 7;
             this.btn_sc2dir.Text = "Change";
             this.btn_sc2dir.UseVisualStyleBackColor = true;
-            this.btn_sc2dir.Click += new System.EventHandler(this.btn_sc2dir_Click);
+            this.btn_sc2dir.Click += new System.EventHandler(this.BtnSc2DirClick);
             // 
             // btn_wc3dir
             // 
@@ -120,7 +120,7 @@
             this.btn_wc3dir.TabIndex = 8;
             this.btn_wc3dir.Text = "Change";
             this.btn_wc3dir.UseVisualStyleBackColor = true;
-            this.btn_wc3dir.Click += new System.EventHandler(this.btn_wc3dir_Click);
+            this.btn_wc3dir.Click += new System.EventHandler(this.BtnWc3DirClick);
             // 
             // btn_ok
             // 
@@ -130,7 +130,7 @@
             this.btn_ok.TabIndex = 9;
             this.btn_ok.Text = "OK";
             this.btn_ok.UseVisualStyleBackColor = true;
-            this.btn_ok.Click += new System.EventHandler(this.btn_ok_Click);
+            this.btn_ok.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // openFileDialog1
             // 

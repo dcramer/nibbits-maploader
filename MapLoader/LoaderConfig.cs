@@ -12,21 +12,21 @@ namespace Nibbler
 {
     public partial class LoaderConfig : Form
     {
-        ExtensionConfiguration extConf;
-        PathFinder pathFinder;
+        ExtensionConfiguration _extConf;
+        PathFinder _pathFinder;
 
         public LoaderConfig()
         {
             InitializeComponent();
         }
 
-        private void btn_ok_Click(object sender, EventArgs e)
+        private void BtnOkClick(object sender, EventArgs e)
         {
-            ClientSettings.Default.SC1_INSTALL_PATH = tb_sc1dir.Text;
-            ClientSettings.Default.SC2_INSTALL_PATH = tb_sc2dir.Text;
-            ClientSettings.Default.WC3_INSTALL_PATH = tb_wc3dir.Text;
-            ClientSettings.Default.Save();
-            this.Close();
+            Properties.Client.Default.SC1_INSTALL_PATH = tb_sc1dir.Text;
+            Properties.Client.Default.SC2_INSTALL_PATH = tb_sc2dir.Text;
+            Properties.Client.Default.WC3_INSTALL_PATH = tb_wc3dir.Text;
+            Properties.Client.Default.Save();
+            Close();
             // Application.Exit();
         }
 
@@ -35,38 +35,38 @@ namespace Nibbler
             // ==========================================================
             // Reading XML Extension Config
             // ==========================================================
-            extConf = new ExtensionConfiguration();
-            extConf.ReadConfig();
+            _extConf = new ExtensionConfiguration();
+            _extConf.ReadConfig();
 
             // ==========================================================
             // Find Pathes for Game Folders etc.
             // ==========================================================
-            pathFinder = new PathFinder();
-            pathFinder.GatherPathes();
+            _pathFinder = new PathFinder();
+            _pathFinder.GatherPathes();
 
             //Check if we know our dirs
-            tb_sc1dir.Text = pathFinder.GetPath("%SC1_INSTALL_PATH%");
+            tb_sc1dir.Text = _pathFinder.GetPath("%SC1_INSTALL_PATH%");
 
-            tb_sc2dir.Text = pathFinder.GetPath("%SC2_INSTALL_PATH%");
+            tb_sc2dir.Text = _pathFinder.GetPath("%SC2_INSTALL_PATH%");
 
-            tb_wc3dir.Text = pathFinder.GetPath("%WC3_INSTALL_PATH%");
+            tb_wc3dir.Text = _pathFinder.GetPath("%WC3_INSTALL_PATH%");
         }
 
-        private void btn_sc1dir_Click(object sender, EventArgs e)
+        private void BtnSc1DirClick(object sender, EventArgs e)
         {
-            string sc1 = pathFinder.QueryUserForPath(this, "%SC1_INSTALL_PATH%");
+            string sc1 = _pathFinder.QueryUserForPath(this, "%SC1_INSTALL_PATH%");
             tb_sc1dir.Text = sc1;
         }
 
-        private void btn_sc2dir_Click(object sender, EventArgs e)
+        private void BtnSc2DirClick(object sender, EventArgs e)
         {
-            string sc2 = pathFinder.QueryUserForPath(this, "%SC2_INSTALL_PATH%");
+            string sc2 = _pathFinder.QueryUserForPath(this, "%SC2_INSTALL_PATH%");
             tb_sc2dir.Text = sc2;
         }
 
-        private void btn_wc3dir_Click(object sender, EventArgs e)
+        private void BtnWc3DirClick(object sender, EventArgs e)
         {
-            string wc3 = pathFinder.QueryUserForPath(this, "%WC3_INSTALL_PATH%");
+            string wc3 = _pathFinder.QueryUserForPath(this, "%WC3_INSTALL_PATH%");
             tb_wc3dir.Text = wc3;
         }
     }

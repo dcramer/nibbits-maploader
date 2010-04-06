@@ -11,7 +11,7 @@ namespace Nibbler
     class ExtensionConfiguration
     {
 
-        private Dictionary<string, Extension> dictExtConfiguration;
+        private readonly Dictionary<string, Extension> _dictExtConfiguration;
 
         /// <summary>
         /// Checks if there's an action defined for this extension
@@ -19,7 +19,7 @@ namespace Nibbler
         /// <returns></returns>
         public bool IsValidExtension(string extension)
         {
-            return dictExtConfiguration.ContainsKey(extension);
+            return _dictExtConfiguration.ContainsKey(extension);
         }
 
 
@@ -31,34 +31,34 @@ namespace Nibbler
         public string GetCopyPathForExtension(string extension) {
             
             // check if we have something for this extension in store
-            if (!dictExtConfiguration.ContainsKey(extension.ToLower())) return "";
+            if (!_dictExtConfiguration.ContainsKey(extension.ToLower())) return "";
             
-            Extension currentExtension = dictExtConfiguration[extension.ToLower()];
+            Extension currentExtension = _dictExtConfiguration[extension.ToLower()];
             
             // Determining OS
-            OperatingSystem os = System.Environment.OSVersion;
-            Version osVersion = os.Version;
+            var os = Environment.OSVersion;
+            var osVersion = os.Version;
 
             // good ol' Xp
             if (osVersion.Major == 5)
             {
-                if (currentExtension.dictActionsPerOS.ContainsKey("xp")) return currentExtension.dictActionsPerOS["xp"];
-                else return currentExtension.dictActionsPerOS["default"];
+                if (currentExtension.DictActionsPerOs.ContainsKey("xp")) return currentExtension.DictActionsPerOs["xp"];
+                else return currentExtension.DictActionsPerOs["default"];
             }
             // Windows Vista
             else if (osVersion.Major == 6 && osVersion.Minor == 0)
             {
-                if (currentExtension.dictActionsPerOS.ContainsKey("vista")) return currentExtension.dictActionsPerOS["vista"];
-                else return currentExtension.dictActionsPerOS["default"];
+                if (currentExtension.DictActionsPerOs.ContainsKey("vista")) return currentExtension.DictActionsPerOs["vista"];
+                else return currentExtension.DictActionsPerOs["default"];
             }
             // Windows 7
             else if (osVersion.Major == 6 && osVersion.Minor == 1)
             {
-                if (currentExtension.dictActionsPerOS.ContainsKey("windows7")) return currentExtension.dictActionsPerOS["windows7"];
-                else return currentExtension.dictActionsPerOS["default"];
+                if (currentExtension.DictActionsPerOs.ContainsKey("windows7")) return currentExtension.DictActionsPerOs["windows7"];
+                else return currentExtension.DictActionsPerOs["default"];
             }
 
-            return currentExtension.dictActionsPerOS["default"];
+            return currentExtension.DictActionsPerOs["default"];
         }
 
 
@@ -67,19 +67,19 @@ namespace Nibbler
         /// </summary>
         class Extension
         {
-            public string ExtensionName;            
-            public Dictionary<string, string> dictActionsPerOS;
+            public readonly string ExtensionName;            
+            public readonly Dictionary<string, string> DictActionsPerOs;
 
             public Extension(string name)
             {
-                this.ExtensionName = name;
-                dictActionsPerOS = new Dictionary<string, string>();
+                ExtensionName = name;
+                DictActionsPerOs = new Dictionary<string, string>();
             }
         }
 
         public ExtensionConfiguration()
         {
-            dictExtConfiguration = new Dictionary<string, Extension>();
+            _dictExtConfiguration = new Dictionary<string, Extension>();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Nibbler
         public void ReadConfig()
         {
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            XmlTextReader reader = new XmlTextReader( appPath + "/extensions.xml");
+            var reader = new XmlTextReader( appPath + "/extensions.xml");
 
 
             Extension currentExtension = null;
@@ -109,8 +109,13 @@ namespace Nibbler
                         currentAction = reader.Value;
                         break;
                     case XmlNodeType.EndElement:
-                        if (reader.Name == "extension") dictExtConfiguration.Add(currentExtension.ExtensionName, currentExtension);
-                        else currentExtension.dictActionsPerOS.Add(reader.Name, currentAction);
+                        if (currentExtension != null)
+                        {
+                            if (reader.Name == "extension") _dictExtConfiguration.Add(currentExtension.ExtensionName, currentExtension);
+                            else currentExtension.DictActionsPerOs.Add(reader.Name, currentAction);
+                        }
+                        else
+                            throw new XmlException("Malformed XML");
                         break;
                 }
             }

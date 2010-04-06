@@ -19,16 +19,13 @@ namespace Nibbler
             if (args.Length == 0)
             {
                 Application.Run(new LoaderConfig());
-                Application.Exit();
                 return;
             }
 
             string link = args[0];
-            //string link = "nibbits://wc3.nibbits.com/maps/get/131603/";
-            //string link = "nibbits://sc2.nibbits.com/maps/get/132027/";
-            //string link = "nibbits://sc.nibbits.com/maps/get/131761/";
-
-            link = link.Replace("nibbits://", "http://");
+            
+            //I recommend relocating "nibbits" somewhere, and adding some logic to register the helper.
+            link = link.Replace(link.Substring(0, "nibbits".Length), "http");
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
