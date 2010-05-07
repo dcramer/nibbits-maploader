@@ -52,6 +52,8 @@ namespace Nibbler
                 // ==========================================================
                 // Check Extension
                 // ==========================================================
+                // TODO: Deal with encoded characters in the URL (such as %20)
+                // resp.Headers('Content-Disposition')
                 string fileName = _fileUri.Segments[_fileUri.Segments.Length - 1].Replace('+', ' ');
                 string extension = Path.GetExtension(fileName);
 
